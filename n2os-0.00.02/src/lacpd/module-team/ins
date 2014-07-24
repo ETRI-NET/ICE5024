@@ -1,2 +1,0 @@
-sudo insmod ./nteam.ko
-sudo insmod ./nteam_mode_loadbalance.ko
