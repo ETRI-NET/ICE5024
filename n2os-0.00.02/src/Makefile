@@ -1,5 +1,5 @@
 #SUBDIRS 	:= lib cmd processmgr ipcmgr ribmgr polmgr ripd pifmgr lacpd
-SUBDIRS    := lib cmd processmgr ipcmgr ribmgr polmgr ripd isisd ospfd
+SUBDIRS    := lib cmd processmgr ipcmgr polmgr
 
 all:    .subdirs
 clean:
