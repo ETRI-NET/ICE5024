@@ -1,5 +1,0 @@
-Configuration for N2OS LACP:
-Run
-./configure --disable-dbus CFLAGS='-DN2OS -DN2OS_KERNEL_2_6_3x -DN2OS_IFLA_ADDRESS -fPIC'
-or
-./configure --disable-dbus CFLAGS='-DN2OS -DN2OS_KERNEL_2_6_3x -DN2OS_IFLA_ADDRESS -fPIC' PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
