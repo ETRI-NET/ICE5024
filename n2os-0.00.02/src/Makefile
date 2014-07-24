@@ -1,4 +1,4 @@
-#SUBDIRS 	:= lib cmd processmgr ipcmgr ribmgr polmgr ripd pifmgr lacpd
+#SUBDIRS := lib cmd processmgr ipcmgr ribmgr polmgr ripd pifmgr lacpd
 SUBDIRS    := lib cmd processmgr ipcmgr ribmgr polmgr ripd isisd ospfd
 
 all:    .subdirs
