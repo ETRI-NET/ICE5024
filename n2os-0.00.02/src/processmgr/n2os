@@ -1,0 +1,73 @@
+#!/bin/sh
+
+procmgrd_exec_dir=.
+procmgrd_bin="procmgrd"
+procmgrd_path=$procmgrd_exec_dir/$procmgrd_bin
+procmgrd_pid=`pidof $procmgrd_path`
+service_top_timeout=120 # 2 min
+
+COMMAND="$1"
+
+wait_for_pid () {
+    i=0
+
+    echo "Maximum wait 120 sec..."
+
+    while test $i -ne $service_top_timeout ; do
+        if test -z `pidof $procmgrd_path` ; then
+            exit 0
+        fi
+
+        i=`expr $i + 1`
+        sleep 1
+    done
+
+    exit 1
+}
+
+case $COMMAND in
+status)
+    if test -z $procmgrd_pid ; then
+        echo $procmgrd_bin "is Not Run"
+        exit 1
+    else
+        echo $procmgrd_bin "is Run"
+        exit 0
+    fi
+    ;;
+start)
+    if test -z $procmgrd_pid ; then
+        ./procmgrd
+        exit 0
+    else
+        echo $procmgrd_bin "is already running..."
+        exit 1
+    fi
+    ;;
+stop)
+    if test -z $procmgrd_pid ; then
+        echo $procmgrd_bin "is not runnding."
+        exit 1
+    else
+        kill $procmgrd_pid
+        echo "Stop "$procmgrd_bin"..."
+
+        wait_for_pid; return_value=$?
+
+        exit 0
+    fi
+    ;;
+restart)
+    if $0 stop; then
+        $0 start
+    else
+        echo "Failed to stop " $procmgrd_bin", so refusing to try to start."
+        exit 1
+    fi
+    ;;
+help)
+    echo "Usage: n2os {start|stop|restart|status|help}";
+    ;;
+*)
+    $0 help
+esac

@@ -1,0 +1,77 @@
+
+LIB_SUB_PATH := ./lib
+LIB_JANSSON := $(LIB_SUB_PATH)/jansson-2.5
+LIB_DAEMON = $(LIB_SUB_PATH)/libdaemon-0.14
+LIB_NL := $(LIB_SUB_PATH)/libnl-3.2.24
+
+all: libnl libjansson libdaemon
+
+libnl:
+		@if test ! -f $(LIB_NL)/Makefile; then \
+			cd $(LIB_NL); ./configure; cd ../..; \
+		fi
+		make -C $(LIB_NL)
+
+libjansson:
+		@if test ! -f $(LIB_JANSSON)/Makefile; then \
+			cd $(LIB_JANSSON); ./configure; cd ../..; \
+		fi
+		make -C $(LIB_JANSSON)
+
+libdaemon:
+		@if test ! -f $(LIB_DAEMON)/Makefile; then \
+			cd $(LIB_DAEMON); ./configure; cd ../..; \
+		fi
+		make -C $(LIB_DAEMON)
+
+clean: libnl-clean libjansson-clean libdaemon-clean
+
+libnl-clean:
+		@if test -f $(LIB_NL)/Makefile; then \
+			make -C $(LIB_NL) clean; \
+		fi
+
+libjansson-clean:
+		@if test -f $(LIB_JANSSON)/Makefile; then \
+			make -C $(LIB_JANSSON) clean; \
+		fi
+
+libdaemon-clean:
+		@if test -f $(LIB_DAEMON)/Makefile; then \
+			make -C $(LIB_DAEMON) clean; \
+		fi
+
+install: libnl-install libjansson-install libdaemon-install
+
+libnl-install:
+		@if test -f $(LIB_NL)/Makefile; then \
+			sudo make -C $(LIB_NL) install; \
+		fi
+
+libjansson-install:
+		@if test -f $(LIB_JANSSON)/Makefile; then \
+			sudo make -C $(LIB_JANSSON) install; \
+		fi
+
+libdaemon-install:
+		@if test -f $(LIB_DAEMON)/Makefile; then \
+			sudo make -C $(LIB_DAEMON) install; \
+		fi
+
+distclean: libnl-distclean libjansson-distclean libdaemon-distclean
+
+libnl-distclean:
+		@if test -f $(LIB_NL)/Makefile; then \
+			make -C $(LIB_NL) distclean; \
+		fi
+
+libjansson-distclean:
+		@if test -f $(LIB_JANSSON)/Makefile; then \
+			make -C $(LIB_JANSSON) distclean; \
+		fi
+
+libdaemon-distclean:
+		@if test -f $(LIB_DAEMON)/Makefile; then \
+			make -C $(LIB_DAEMON) distclean; \
+		fi
+
