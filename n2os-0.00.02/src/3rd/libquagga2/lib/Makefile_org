@@ -1,0 +1,37 @@
+.SUFFIXES = .c .o 
+
+NOSPATH   = ../../../..
+
+NOSINCPATH = $(NOSPATH)/src/lib
+NOSLIBPATH = $(NOSPATH)/lib
+NOSBINPATH = $(NOSPATH)/bin
+NOSCMDPATH = $(NOSPATH)/src/lib/cmdlib
+NOSEXTPATH = $(NOSPATH)/src/exthdr
+
+INCLUDES:= -I.. -I$(NOSINCPATH) -I$(NOSINCPATH)/include -I$(NOSCMDPATH) -I$(NOSEXTPATH) -I$(NOSINCPATH)/riblib -I./ -I./include -fPIC
+
+CFLAGS = -O2 -g $(INCLUDES)
+
+DEFS    := 
+
+OBJS = network.o pid_output.o getopt.o getopt1.o daemon.o \
+	checksum.o vector.o linklist.o vty.o command.o \
+	sockunion.o prefix.o thread.o if.o memory.o buffer.o table.o hash.o \
+	filter.o routemap.o distribute.o stream.o str.o log.o plist.o \
+	zclient.o sockopt.o smux.o agentx.o snmp.o md5.o if_rmap.o keychain.o privs.o \
+	sigevent.o pqueue.o jhash.o memtypes.o workqueue.o
+
+SRCS = $(OBJS:.o=.c) 
+
+TARGET=libzebra.a
+
+$(TARGET) : $(OBJS)
+	$(AR) -rcs $(TARGET) $(OBJS)
+	cp $(TARGET) ../../../../lib
+
+dep :
+	gccmakedep $(SRCS)
+
+clean:
+	rm -f *.o $(TARGET)
+	rm -f ../../../../lib/$(TARGET)
