@@ -1,0 +1,68 @@
+# FEA library make
+
+TARGET = libfea.a
+
+FEA_SRCS = \
+			pifFea.c 
+
+HAL_SRCS = \
+		./hal/l2swfwdr/hal.c \
+		./hal/l2swfwdr/hal_bridge.c \
+		./hal/l2swfwdr/hal_garp.c \
+		./hal/l2swfwdr/hal_if_generic.c \
+		./hal/l2swfwdr/hal_l2_fdb.c \
+		./hal/l2swfwdr/hal_lacp.c 
+
+PAL_SRCS = \
+		./pal/interface.c \
+		./pal/connected.c \
+		./pal/palKernelIfTypes.c \
+		./pal/palKernelProc.c \
+		./pal/palKernelMii.c \
+		./pal/palKernelNetlink.c \
+		./pal/palKernelIoctl.c \
+		./pal/palKernel.c 
+
+# Compile macro
+CC  = gcc
+MV  = mv
+CP  = cp
+RM  = rm -f
+AR = ar
+ARFLAGS = -rv
+CFLAGS  = -g -Wall $(DEFINES) $(INCLUDES)
+
+# Defines and path
+DEFINES   = 
+NOSPATH   = /root/work-NOS/n2os-0.00.01
+NOSINCPATH = $(NOSPATH)/src/lib
+NOSLIBPATH = $(NOSPATH)/lib
+NOSCMDPATH = $(NOSPATH)/src/cmd/common
+FEAPATH    = ./
+
+PAL_INC = -I$(FEAPATH)/pal
+HAL_INC = -I$(FEAPATH)/hal -I$(FEAPATH)/hal/L2 -I$(FEAPATH)/hal/L3 -I$(FEAPATH)/hal/l2swfwdr   
+INCLUDES = -I../ -I. -I./nos -I$(NOSINCPATH) -I$(NOSINCPATH)/include -I$(NOSCMDPATH) $(PAL_INC) $(HAL_INC)
+
+FEA_OBJS = $(FEA_SRCS:.c=.o)
+HAL_OBJS = $(HAL_SRCS:.c=.o)
+PAL_OBJS = $(PAL_SRCS:.c=.o)
+
+.PHONY: all clean
+all: $(TARGET) 
+
+$(TARGET): $(PAL_OBJS) $(HAL_OBJS) $(FEA_OBJS)
+	$(AR) $(ARFLAGS) $(TARGET) $(FEA_OBJS) $(PAL_OBJS) $(HAL_OBJS) 
+
+$(PAL_OBJS):%.o:%.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(HAL_OBJS):%.o:%.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(FEA_OBJS):%.o:%.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+clean:
+	$(RM) $(TARGET) $(FEA_OBJS) $(PAL_OBJS) $(HAL_OBJS) $(SRC:.c=.d)
+
